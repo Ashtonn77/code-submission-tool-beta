@@ -11,12 +11,12 @@
 <p>
     @if (string.IsNullOrEmpty(username))
     {
-        <span><a href="/testregister">Register</a> <a href="/testlogin">Login</a></span>
+        <span><a href="/">Register</a> <a href="/testlogin">Login</a></span>
     }
 
     else if (string.IsNullOrEmpty(role) || !role.Equals("developer"))
     {
-        @*<span>You don't have sufficient permissions to access this part of the application</span>*@
+       
         <AccessDenied/>
     }
     else
