@@ -1,0 +1,137 @@
+﻿@page "/login"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<style>
+
+
+    * {
+        font-family: Karla, 'sans-serif';
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .reg-container {
+        width: 80%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 30px;
+        border: 1px solid #333;
+        border-radius: 5px;
+    }
+
+    h1 {
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #798785;
+    }
+
+        input:focus {
+            border: none;
+            outline-color: #333;
+        }
+
+    .btn-container {
+        margin-top: 10px;
+    }
+
+    button {
+        margin-right: 10px;
+    }
+
+</style>
+
+<div class="wrapper">
+
+    <center><h1>Login</h1></center>
+
+    <div class="reg-container">
+
+        <div class="error">@error</div>
+
+        <input type="email" placeholder="Enter Email" @bind="currentUser.Email" />
+
+        <input type="password" placeholder="Enter Password" @bind="currentUser.Password" />
+
+        <div class="btn-container">
+
+            <button class="btn btn-success btn-sm" @onclick="checkUser">Login</button>
+
+            <a href="/register">Don't have an account? Register</a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@code {
+
+    User currentUser = new User();
+    private string error = "";
+        
+
+    private async Task checkUser()
+    {
+        bool valid = true;
+        User user = await httpClient.GetFromJsonAsync<User>($"api/user/login/{currentUser.Email.ToLower()}");
+
+        if (user == null)
+        {
+            valid = false;
+            error = "No user found";
+        }
+
+        if (valid)
+        {
+            string password = user.Password;
+            if (password != currentUser.Password)
+            {
+                valid = false;
+                error = "Incorrect password";
+            }
+        }
+
+        if (valid)
+        {
+            string role = user.Role;
+            if (role.Equals("Developer"))
+            {
+                navigationManager.NavigateTo($"/developer/{user.FirstName} {user.LastName}");
+            }
+            else if (role.Equals("Admin"))
+            {
+                navigationManager.NavigateTo($"/admin/{user.FirstName} {user.LastName}");
+            }
+            else if (role.Equals("Candidate"))
+            {
+                navigationManager.NavigateTo($"/candidate/{user.FirstName} {user.LastName}");
+            }
+            else
+            {
+                navigationManager.NavigateTo("/error");
+            }
+        }
+
+    }
+
+}

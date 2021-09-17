@@ -1,0 +1,17 @@
+﻿@inherits CandidateRowBase
+@inject NavigationManager navigation
+
+<tr>
+    <td>@Candidate.Name</td>
+    <td>@Candidate.Surname</td>
+    <td>@Candidate.Email</td>
+    <td>
+        <button class="btn btn-primary" @onclick="e => Toggle = !Toggle">See Submission</button>
+    </td>
+</tr>
+
+@if (Toggle)
+{
+    string url = "/submitPage";
+    navigation.NavigateTo(url + "/" + Candidate.SubmissionId);
+}

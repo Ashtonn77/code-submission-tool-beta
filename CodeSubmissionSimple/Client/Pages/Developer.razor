@@ -1,0 +1,10 @@
+﻿@page "/developer/{name}"
+
+<h3>Developer</h3>
+<h2>Welcome, @name</h2>
+
+@code {
+
+    [Parameter]
+    public string name { get; set; }
+}

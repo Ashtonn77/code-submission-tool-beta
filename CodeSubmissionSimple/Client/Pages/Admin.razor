@@ -1,0 +1,11 @@
+﻿@page "/admin/{name}"
+
+<h3>Admin</h3>
+<h2>Welcome, @name</h2>
+
+@code {
+
+    [Parameter]
+    public string name { get; set; }
+
+}

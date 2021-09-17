@@ -1,0 +1,10 @@
+﻿@page  "/candidate/{name}"
+
+<h3>Candidate</h3>
+<h2>Welcome, @name</h2>
+
+@code {
+
+    [Parameter]
+    public string name { get; set; }
+}

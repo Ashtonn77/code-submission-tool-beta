@@ -1,0 +1,59 @@
+﻿@page "/testregister"
+@inject HttpClient Http
+
+<h3>TestRegister</h3>
+
+<p>@message</p>
+<p><a href="/login">@login</a></p>
+
+<EditForm Model="reg" OnValidSubmit="OnValid" style="max-width:500px;">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-2">
+        <InputText class="form-control" @bind-Value="reg.Email" placeholder="Enter Email"></InputText>
+    </div>
+
+    <div class="mb-2">
+        <InputText class="form-control" @bind-Value="reg.Role" placeholder="Enter Role"></InputText>
+    </div>
+
+    <div class="mb-2">
+        <InputText type="password" class="form-control" @bind-Value="reg.Password" placeholder="Enter Password"></InputText>
+    </div>
+    <div class="mb-2">
+        <InputText type="password" class="form-control" @bind-Value="reg.ConfirmPassword" placeholder="Confirm Password"></InputText>
+    </div>
+
+    <div class="mb-2 text-right">
+        <button class="btn btn-secondary" disabled="@isDisabled">register</button>
+    </div>
+</EditForm>
+
+
+@code {
+
+    RegisterModel reg = new RegisterModel();
+    string message = string.Empty, login = string.Empty;
+    bool isDisabled = false;
+
+    private async Task OnValid()
+    {
+        isDisabled = true;
+        using (var msg = await Http.PostAsJsonAsync<RegisterModel>("/api/auth/register", reg, System.Threading.CancellationToken.None))
+        {
+            if (msg.IsSuccessStatusCode)
+            {
+                LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                message = result.Message;
+                if (result.Success)
+                {
+                    message += " Please LOGIN to continue.";
+                    login = "Click here to LOGIN.";
+                }
+                else
+                    isDisabled = false;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,161 @@
+﻿@page "/register"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<style>
+
+    * {
+        font-family: Karla, 'sans-serif';
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .reg-container {
+        width: 80%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 30px;
+        border: 1px solid #333;
+        border-radius: 5px;
+    }
+
+    h1 {
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #798785;
+    }
+
+        input:focus {
+            border: none;
+            outline-color: #333;
+        }
+
+    .btn-container {
+        margin-top: 10px;
+    }
+
+    button {
+        margin-right: 10px;
+    }
+</style>
+
+<div class="wrapper">
+
+    <center><h1>Register</h1></center>
+
+    <div class="reg-container">
+
+        <div class="error">@error</div>
+
+        <input type="text" placeholder="First Name" @bind="newUser.FirstName" />
+
+        <input type="text" placeholder="Last Name" @bind="newUser.LastName" />
+
+        <input type="email" placeholder="Enter Email" @bind="newUser.Email" />
+
+        <input type="password" placeholder="Enter Password" @bind="newUser.Password" />
+
+        <input type="password" placeholder="Confirm Password" @bind="confirmPassword" />
+
+        <select class="custom-select" @onchange="OnValueChanged" title="Role is required ">
+            <option value="Select" selected disabled="disabled" style="text-align:center;">--SELECT ROLE--</option>
+            <option value="Developer">Developer</option>
+            <option value="Admin">Admin</option>
+            <option value="Candidate">Candidate</option>
+        </select>
+
+        @if (!string.IsNullOrEmpty(newUser.Role))
+        {
+            if (newUser.Role.Equals("Developer") || newUser.Role.Equals("Admin"))
+            {
+                <input type="password" placeholder="Enter Security Key" @bind="securityKey" />
+            }
+        }
+
+        <div class="btn-container">
+
+            <button class="btn btn-primary btn-sm" @onclick="RegisterUser">Register</button>
+
+            <a href="/login">Already with us? Login</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<p>@securityKey</p>
+
+@code {
+
+    User newUser = new User();
+
+    private string error = "";
+    private string confirmPassword = string.Empty;
+    private string securityKey = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged
+    {
+        get;
+        set;
+    }
+    private Task OnValueChanged(ChangeEventArgs e)
+    {
+        newUser.Role = e.Value.ToString();
+        return ValueChanged.InvokeAsync(newUser.Role);
+    }
+
+
+    private async Task RegisterUser()
+    {
+        bool valid = true;
+
+        if (!newUser.Password.Equals(confirmPassword))
+        {
+            valid = false;
+            error = "Passwords do not match";
+        }
+
+        if (!string.IsNullOrEmpty(newUser.Role) && !newUser.Role.Equals("Candidate") && string.IsNullOrEmpty(securityKey))
+        {
+            valid = false;
+            error = "Invalid Security Key";
+        }
+
+        if (!string.IsNullOrEmpty(newUser.Role) && !newUser.Role.Equals("Candidate") && !securityKey.Equals("1234"))
+        {
+            valid = false;
+            error = "Invalid Security Key";
+        }
+
+        if (valid)
+        {
+            newUser.Email = newUser.Email.ToLower();
+            await httpClient.PostAsJsonAsync("api/user", newUser);
+            navigationManager.NavigateTo("/login");
+        }
+
+    }
+
+
+
+
+}

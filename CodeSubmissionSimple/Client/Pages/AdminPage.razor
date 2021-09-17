@@ -1,0 +1,51 @@
+﻿@page "/AdminPage"
+@inherits CandidateRowBase
+@inject HttpClient client
+
+<style>
+    .main-wrapper {
+        width: 100%;
+        height: 100vh;
+        background-color: #eceff1;
+        border-radius: 5px;
+    }
+</style>
+
+
+<h3>AdminPage</h3>
+@if (Candidates == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="main-wrapper">
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Submission</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var candidate in Candidates)
+                {
+                    <CandateRow Candidate="candidate" />
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@code {
+
+    public List<Candidate> Candidates { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Candidates = await client.GetFromJsonAsync<List<Candidate>>($"api/candidates");
+
+    }
+}
