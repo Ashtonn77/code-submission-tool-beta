@@ -11,9 +11,9 @@
     }
 
     .main-wrapper {
-
         width: 100%;
-        height: 100vh;
+        margin-top: 0px; 
+        height: 1000px;
         display: flex;
         flex-wrap: wrap;
         background-color: #eceff1;
@@ -22,108 +22,134 @@
 
 
     .question-wrapper {
-        width: 95%;
-        height: 25%;
-        margin: auto;
-        border-radius: 1px solid #333;
+        width: 60%;
+        height: 160px;
+        margin-top: 20px ; 
+        margin-left: 20%;
+        margin-right: 20%;
+        border: 1px solid #333;
         border-radius: 5px;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
+;
     }
 
     .code-wrapper {
-        width: 95%;
-        height: 65%;
-        margin: auto;
+        width: 80%;
+        height: 1000px;
+        margin: auto ; 
+        margin-top: 20px;
         border-radius: 1px solid #333;
         border-radius: 5px;
         display: flex;
         flex-direction: column;
+        max-width: 1000px; 
+        
     }
 
     .prev-btn {
-        margin: 0 2%;
+        margin-left: 10% ; 
+        margin-right: 10% ; 
+        width: 80% ; 
+        background-color: dodgerblue ;
+        color: white ; 
+        
     }
 
     .next-btn {
-        margin: 0 2%;
+        margin-left: 10%;
+        margin-right: 10%;
+        width: 80%;
+        background-color: dodgerblue;
+        color: white;
     }
 
     .question {
-        width: 70%;
-        margin: auto;
+        width: 60%;
         height: 80%;
         border: 1px solid #333;
-        background-color: #fff;
-        padding: 10px;
         border-radius: 5px;
+        float: left;
+        padding: 10px; 
+        background-color: #fff ; 
+        overflow: scroll ; 
     }
 
     .btn-container {
-        width:90%;
-        height:15%;
-        display:flex;
+        width: 90%;
+        height: 15%;
+        display: flex;
         justify-content: center;
         align-items: center;
         margin: auto;
     }
 
-    .run-btn {
-         margin-right: 5px;
-    }
 
     .submit-btn {
-    margin-left: 5px;
+        margin-left: 5px;
     }
 
     .code {
-        width: 90%;
-        margin: auto;
-        height: 70%;
+        width: 100%;
+        margin-top:0 ; 
+        height: 600px;
         border: 1px solid #333;
-        background-color: #fff;
-        padding: 1px;
+        background-color: #fff ;
         border-radius: 5px;
     }
 
 
-    textarea{
+    textarea {
         width: 100%;
         height: 100%;
-        border:none;
+        border: none;
         outline: none;
         background-color: #000;
-        color: magenta;
+        color: white;
         padding: 10px;
     }
 
-    .q-title{
+    .q-title {
         font-weight: bold;
         font-size: 18px;
     }
 
-    .candidate{
-        margin-left:40vh;
+    .candidate {
+        float: right ; 
+        width: 40% ; 
+        text-align: right ;
+        font-size: 20px ; 
+        font-weight: bold ;  
     }
 
-    .top-wrapper{
+    .top-wrapper {
         display: flex;
+        height: 50px;
+        
     }
-    .top-title{
-        width: 35%;
+
+    .top-title {
+        width: 60%;
+        float: left ; 
     }
 
     .progressbar {
-        width: 35%;
+        width: 100%;
+        height: 35px;
+        margin: auto;
+        margin-top: 0px;
         background-color: #e8e8e8;
         margin-bottom: 5px;
         border-radius: 5px;
         outline: none;
+        position: relative;
+        color: white ; 
+
     }
 
     .testprogress {
-        background-color: #b452ff;
+        background-color: seagreen;
         width: var(--my-width);
         height: 100%;
         transition: 0.35s all ease-in-out;
@@ -131,162 +157,215 @@
         outline: none;
     }
 
+    .previousDiv{ 
+        margin-top: 30% ; 
+        margin-bottom: 30% ; 
+        width: 20% ; 
+        height: 40%; 
+        float: left ; 
+        align-items: center ; 
+        align-content: center ; 
+
+    }
+
+    .afterDiv {
+        margin-top: 30%;
+        margin-bottom: 30%;
+        width: 20%;
+        height: 40%;
+        float: right;  
+        align-items: center;
+        align-content: center;
+
+        
+    }
+
+    .submitbutton{ 
+        margin-top: 50px; 
+        height:100px; 
+        width: 100% ; 
+
+
+    }
 </style>
 
-@if (submission != null && !completed)
+@if (submission != null )
 {
     <div class="top-wrapper">
         <div class="top-title"> <h3>Xebec - Testing Environment</h3></div>
 
-        @{
-            double count = Math.Round(((double)(counter + 1) / Length) * 100, 2);
-
-            <div class="progressbar">
-                        <div class="testprogress" style="--my-width: @width; display: flex; font-weight: bold; justify-content: center; align-items: center;"> &nbsp; &nbsp; @count%  </div>
-            </div>
-        }
         <div class="candidate">
             @submission.Candidate.Name @submission.Candidate.Surname
         </div>
     </div>
-    <div class="main-wrapper">
+    <div class="progressbar">
+        @{
+            double count = Math.Round(((double)(counter + 1) / Length) * 100, 2);
 
-        <div class="question-wrapper">
+            <div class="testprogress" style="--my-width: @width; display: flex; font-weight: bold; justify-content: center; align-items: center;"> &nbsp; &nbsp; @count%  </div>
 
-            @if (counter > 0)
-            {
-                <button class="prev-btn btn btn-primary" @onclick="Previous">Prev</button>
-            }
-            <div class="question">
 
-                @if (Quests != null)
-                {
-                    <br>
-                    @if (Quests.Count > counter)
+        }
+    </div>
+        <div class="main-wrapper">
+
+            <div class="question-wrapper">
+
+                <div class="previousDiv">
+
+
+                    @if (counter > 0)
                     {
-                        <p class="q-title">Question (@(Quests[counter].Question.Langauge)):</p>
-                        <p>
-                            @(Quests[counter].Question.Description)
-                        </p>
+                        <button class="prev-btn btn btn-success" @onclick="Previous">Prev</button>
                     }
 
-                }
+
+                </div>
+
+                <div class="question">
+
+
+                    @if (Quests != null)
+                    {
+                        <br>
+                        @if (Quests.Count > counter)
+                        {
+                            <p class="q-title">Question (@(Quests[counter].Question.Langauge)):</p>
+                            <p>
+                                @(Quests[counter].Question.Description)
+                            </p>
+                        }
+
+                    }
+
+                </div>
+
+
+               
+                <div class="afterDiv">
+
+                    @if (counter < Length - 1)
+                    {
+                        <button class="next-btn btn btn-success" @onclick="Next">Next</button>
+                    }
+
+
+                </div>
 
             </div>
-            @if (counter < Length - 1)
-            {
-                <button class="next-btn btn btn-success" @onclick="Next">Next</button>
-            }
-        </div>
- 
 
-    <div class="code-wrapper">
 
-        <div class="code">
-            @if (Quests != null)
-            {
-                <textarea @bind="TempCode" rows="15" spellcheck="false"></textarea>
-            }
-        </div>
-        @if (counter >= Length - 1)
-        {
-            <div class="btn-container">
-                <button class="run-btn btn btn-primary">Run</button>
-                <button class="submit-btn btn btn-success" @onclick="Submit">Submit</button>
+            <div class="code-wrapper">
+
+                <div class="code">
+                    @if (Quests != null)
+                    {
+                        <textarea @bind="TempCode" rows="15" spellcheck="false"></textarea>
+                    }
+                </div>
+                <div class="submitbutton">
+                    @if (counter >= Length - 1)
+                    {
+                        <div class="btn-container">
+                            <button class="submit-btn btn btn-success" @onclick="Submit">Submit</button>
+                        </div>
+                    }
+
+
+                </div>
+               
             </div>
+
+        </div>
         }
-    </div>
-
-    </div>
-}
-else
-{
-    <h2>Loading...</h2>
-    if (submission != null)
-    {
-        Dones();
-    }
-}
-
-
-@code {
-    [Inject]
-    ISubmisstionDataService _sClient { get; set; }
-
-    [Parameter]
-    public string SubmissionValue { get; set; }
-
-    private Submission submission;
-    List<TestStatus> Quests { get; set; }
-
-    string TempCode { get; set; } = "";
-
-    int counter { get; set; } = 0;
-    int Length { get; set; } = 0;
-    bool completed { get; set; } = true;
-    string width { get; set; } = "200px";
-    protected override async Task OnInitializedAsync()
-    {
-        //gets the submission model from the ID num
-        submission = await Http.GetFromJsonAsync<Submission>($"api/Submission/1");
-
+        else
+        {
+        <h2>Loading...</h2>
         if (submission != null)
         {
-            Quests = submission.Answers;
-            counter = 0;
-            Length = Quests.Count();
+        Dones();
+        }
+        }
+
+
+        @code {
+            [Inject]
+            ISubmisstionDataService _sClient { get; set; }
+
+            [Parameter]
+            public string SubmissionValue { get; set; }
+
+    private Submission submission;
+        List<TestStatus> Quests { get; set; }
+
+        string TempCode { get; set; } = "";
+
+        int counter { get; set; } = 0;
+        int Length { get; set; } = 0;
+        bool completed { get; set; } = true;
+        string width { get; set; } = "200px";
+        protected override async Task OnInitializedAsync()
+        {
+            //gets the submission model from the ID num
+            submission = await Http.GetFromJsonAsync<Submission>($"api/Submission/1");
+
+            if (submission != null)
+            {
+                Quests = submission.Answers;
+                counter = 0;
+                Length = Quests.Count();
+                setStub(counter);
+                completed = submission.isCompleted;
+
+            }
+        }
+
+        private void setStub(int counter)
+        {
+
+            if (counter > 0 || counter < Length)
+            {
+                if (string.IsNullOrEmpty(Quests[counter].Code))
+                {
+                    TempCode = Quests[counter].Question.CodeStub;
+                }
+                else
+                {
+                    TempCode = Quests[counter].Code;
+                }
+                width = ((counter + 1) / (Length * 1.0) * 100).ToString() + "%";
+
+            }
+        }
+
+        private void Previous()
+        {
+            Quests[counter].Code = TempCode;
+            if (counter > 0)
+            {
+                --counter;
+            }
             setStub(counter);
-            completed = submission.isCompleted;
-
         }
-    }
-
-    private void setStub(int counter)
-    {
-
-        if (counter > 0 || counter < Length)
+        private void Next()
         {
-            if (string.IsNullOrEmpty(Quests[counter].Code))
+            Quests[counter].Code = TempCode;
+            if (counter < Length)
             {
-                TempCode = Quests[counter].Question.CodeStub;
+                ++counter;
             }
-            else
-            {
-                TempCode = Quests[counter].Code;
-            }
-            width = ((counter + 1) / (Length * 1.0) * 100).ToString() + "%";
-
+            setStub(counter);
         }
-    }
-
-    private void Previous()
-    {
-        Quests[counter].Code = TempCode;
-        if (counter > 0)
+        private async Task Submit()
         {
-            --counter;
+            Quests[counter].Code = TempCode;
+            submission.isCompleted = true;
+            await _sClient.UpdateSubmission(submission);
+            navigationManager.NavigateTo("/Done");
         }
-        setStub(counter);
-    }
-    private void Next()
-    {
-        Quests[counter].Code = TempCode;
-        if (counter < Length)
-        {
-            ++counter;
-        }
-        setStub(counter);
-    }
-    private async Task Submit()
-    {
-        Quests[counter].Code = TempCode;
-        submission.isCompleted = true;
-        await _sClient.UpdateSubmission(submission);
-        navigationManager.NavigateTo("/Done");
-    }
 
-    void Dones()
-    {
-        navigationManager.NavigateTo("/alreadyDone");
-    }
-}
+        void Dones()
+        {
+            navigationManager.NavigateTo("/alreadyDone");
+        }
+        }
