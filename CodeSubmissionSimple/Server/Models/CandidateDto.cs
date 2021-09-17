@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace CodeSubmissionSimple.Server.Models
 {
-    public class CandidateDto
+    public class CandidateDto : AppUserDto
     {
-        public int CandidateId { get; set; }
-
+        public CandidateDto(string email, string role, string passwordHash)
+            : base(email, role, passwordHash)
+        {
+        }
         public string Name { get; set; }
 
         public string Surname { get; set; }
-
-        public string Email { get; set; }
 
         public int SubmissionId { get; set; }
         public SubmissionDto Submission { get; set; }

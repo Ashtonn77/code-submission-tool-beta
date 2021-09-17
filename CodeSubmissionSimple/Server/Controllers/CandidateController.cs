@@ -55,7 +55,7 @@ namespace CodeSubmissionSimple.Server.Controllers
         {
             try
             {
-                var candidate = await _unitOfWork.Candidates.Get(q => q.CandidateId == id);
+                var candidate = await _unitOfWork.Candidates.Get(q => q.Id == id);
                 var result = _mapper.Map<CandidateDto>(candidate);
                 return Ok(result);
             }
@@ -88,7 +88,7 @@ namespace CodeSubmissionSimple.Server.Controllers
                 await _unitOfWork.Candidates.Insert(candidate);
                 await _unitOfWork.Save();
 
-                return CreatedAtAction("Getcandidate", new { id = candidate.CandidateId }, candidate);
+                return CreatedAtAction("Getcandidate", new { id = candidate.Id }, candidate);
 
             }
             catch (Exception e)
@@ -113,7 +113,7 @@ namespace CodeSubmissionSimple.Server.Controllers
 
             try
             {
-                var originalcandidate = await _unitOfWork.Candidates.Get(q => q.CandidateId == id);
+                var originalcandidate = await _unitOfWork.Candidates.Get(q => q.Id == id);
 
                 if (originalcandidate == null)
                 {
@@ -149,7 +149,7 @@ namespace CodeSubmissionSimple.Server.Controllers
 
             try
             {
-                var candidate = await _unitOfWork.Candidates.Get(q => q.CandidateId == id);
+                var candidate = await _unitOfWork.Candidates.Get(q => q.Id == id);
 
                 if (candidate == null)
                 {
