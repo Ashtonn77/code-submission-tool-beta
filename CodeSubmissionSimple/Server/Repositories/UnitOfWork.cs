@@ -14,7 +14,7 @@ namespace CodeSubmissionSimple.Server.Repositories
 
         private ISubmissionRepository _submissions;
         private IGenericRepository<Question> _questions;
-        private IGenericRepository<Candidate> _candidates;
+        private ICandidateRepo _candidates;
         private IGenericRepository<TestStatus> _testStatuses;
         private IGenericRepository<User> _users;
         private IGenericRepository<AppUser> _appusers;
@@ -28,7 +28,7 @@ namespace CodeSubmissionSimple.Server.Repositories
 
         public IGenericRepository<Question> Questions => _questions ??= new GenericRepository<Question>(_context);
 
-        public IGenericRepository<Candidate> Candidates => _candidates ??= new GenericRepository<Candidate>(_context);
+        public ICandidateRepo Candidates => _candidates ??= new CandidateRepo(_context);
 
         public IGenericRepository<TestStatus> TestStatuses => _testStatuses ??= new GenericRepository<TestStatus>(_context);
 

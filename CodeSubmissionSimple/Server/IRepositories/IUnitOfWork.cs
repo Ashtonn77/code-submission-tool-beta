@@ -13,7 +13,7 @@ namespace CodeSubmissionSimple.Server.IRepositories
 
         IGenericRepository<Question> Questions { get; }
 
-        IGenericRepository<Candidate> Candidates { get; }
+        ICandidateRepo Candidates { get; }
 
         IGenericRepository<TestStatus> TestStatuses { get; }
         IGenericRepository<User> Users { get; }
