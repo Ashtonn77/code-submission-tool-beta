@@ -94,8 +94,13 @@
                 if (result.Success)
                 {
                     await jsr.InvokeVoidAsync("localStorage.setItem", "user", $"{result.Email};{result.Role};{result.JwtBearer}").ConfigureAwait(false);
-                    NavigationManager.NavigateTo("/testhome");
+                    if (result.Role.Equals("Developer") || result.Role.Equals("Admin"))
+                    {
+                        IsSuccessful = true;
+                        NavigationManager.NavigateTo("/AdminPage");
+                    }
                     IsSuccessful = true;
+                    NavigationManager.NavigateTo("/testHome");
                 }
             }
         }
