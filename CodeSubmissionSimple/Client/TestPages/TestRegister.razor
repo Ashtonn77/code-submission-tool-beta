@@ -1,59 +1,153 @@
-﻿@page "/testregister"
+﻿@page "/"
 @inject HttpClient Http
 
-<h3>TestRegister</h3>
 
-<p>@message</p>
-<p><a href="/login">@login</a></p>
+<style>
 
-<EditForm Model="reg" OnValidSubmit="OnValid" style="max-width:500px;">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="mb-2">
-        <InputText class="form-control" @bind-Value="reg.Email" placeholder="Enter Email"></InputText>
-    </div>
+    * {
+        font-family: 'Montserrat', sans-serif;
+    }
 
-    <div class="mb-2">
-        <InputText class="form-control" @bind-Value="reg.Role" placeholder="Enter Role"></InputText>
-    </div>
+    .wrapper-reg {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+    }
 
-    <div class="mb-2">
-        <InputText type="password" class="form-control" @bind-Value="reg.Password" placeholder="Enter Password"></InputText>
-    </div>
-    <div class="mb-2">
-        <InputText type="password" class="form-control" @bind-Value="reg.ConfirmPassword" placeholder="Confirm Password"></InputText>
-    </div>
+    .reg-container {
+        width: 80%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 25px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        border-radius: 5px;
+    }
 
-    <div class="mb-2 text-right">
-        <button class="btn btn-secondary" disabled="@isDisabled">register</button>
-    </div>
-</EditForm>
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-container a{
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+</style>
+
+
+<div class="wrapper-reg mt-5">
+
+    <h3>Register</h3>
+    
+    <p>@message</p>
+    <p><a href="/testlogin">@login</a></p>
+
+    <EditForm Model="reg" OnValidSubmit="OnValid" class="reg-container">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-2">
+            <InputText class="form-control" @bind-Value="reg.Email" placeholder="Enter Email"></InputText>
+        </div>
+
+        <div class="mb-2">
+            <InputText type="password" class="form-control" @bind-Value="reg.Password" placeholder="Enter Password"></InputText>
+        </div>
+        <div class="mb-2">
+            <InputText type="password" class="form-control" @bind-Value="reg.ConfirmPassword" placeholder="Confirm Password"></InputText>
+        </div>
+
+        <select class="custom-select mb-2" @onchange="OnValueChanged" title="Role is required ">
+            <option value="Select" selected disabled="disabled" style="text-align:center; font-family:inherit;">-- Select Role --</option>
+            <option value="Developer">Developer</option>
+            <option value="Admin">Admin</option>
+            <option value="Candidate">Candidate</option>
+        </select>
+
+        @if (!string.IsNullOrEmpty(reg.Role))
+        {
+            if (reg.Role.Equals("Developer") || reg.Role.Equals("Admin"))
+            {
+                <div class="mb-2">
+                    <InputText type="password" class="form-control mb-2" @bind-Value="securityKey" placeholder="Enter Security Key"></InputText>
+                </div>
+            }
+        }
+
+
+        <div class="mb-2 mt-2 text-left btn-container">
+            <button class="btn btn-primary btn-sm" disabled="@isDisabled">Register</button>
+            &nbsp; &nbsp; <a href="/testlogin">Already with us? Login</a>
+        </div>
+
+    </EditForm>
+
+
+</div>
 
 
 @code {
 
     RegisterModel reg = new RegisterModel();
-    string message = string.Empty, login = string.Empty;
+    string message = string.Empty;
+    string login = string.Empty;
     bool isDisabled = false;
+    private string securityKey = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged
+    {
+        get;
+        set;
+    }
+    private Task OnValueChanged(ChangeEventArgs e)
+    {
+        reg.Role = e.Value.ToString();
+        return ValueChanged.InvokeAsync(reg.Role);
+    }
+
+
 
     private async Task OnValid()
     {
-        isDisabled = true;
-        using (var msg = await Http.PostAsJsonAsync<RegisterModel>("/api/auth/register", reg, System.Threading.CancellationToken.None))
+        bool validSecurityKey = true;
+
+        //check security key
+
+        if (reg.Role != null && !reg.Role.Equals("Candidate"))
         {
-            if (msg.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(securityKey) || !securityKey.Equals("1234"))
+                validSecurityKey = false;
+
+        }
+
+        if (validSecurityKey)
+        {
+            isDisabled = true;
+            using (var msg = await Http.PostAsJsonAsync<RegisterModel>("/api/auth/register", reg, System.Threading.CancellationToken.None))
             {
-                LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
-                message = result.Message;
-                if (result.Success)
+                if (msg.IsSuccessStatusCode)
                 {
-                    message += " Please LOGIN to continue.";
-                    login = "Click here to LOGIN.";
+                    LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                    message = result.Message;
+                    if (result.Success)
+                    {
+                        message += " Please LOGIN to continue.";
+                        login = "Click here to LOGIN.";
+                    }
+                    else
+                        isDisabled = false;
                 }
-                else
-                    isDisabled = false;
             }
         }
+
+
     }
 
 }

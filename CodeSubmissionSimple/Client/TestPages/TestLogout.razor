@@ -10,6 +10,6 @@
     {
         await base.OnInitializedAsync();
         await jsr.InvokeVoidAsync("localStorage.removeItem", "user").ConfigureAwait(false);
-        nav.NavigateTo("/");
+        nav.NavigateTo("/testhome");
     }
 }

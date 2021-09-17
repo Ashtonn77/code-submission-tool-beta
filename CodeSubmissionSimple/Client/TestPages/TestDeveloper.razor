@@ -1,0 +1,45 @@
+﻿@page "/testdev"
+@inject IJSRuntime jsr
+
+<style>
+    span {
+        font-weight: bold;
+        font-size: 30px;
+    }
+</style>
+
+<p>
+    @if (string.IsNullOrEmpty(username))
+    {
+        <span><a href="/testregister">Register</a> <a href="/testlogin">Login</a></span>
+    }
+
+    else if (string.IsNullOrEmpty(role) || !role.Equals("developer"))
+    {
+        @*<span>You don't have sufficient permissions to access this part of the application</span>*@
+        <AccessDenied/>
+    }
+    else
+    {
+<span>Welcome, @username </span><TestUser />
+    }
+</p>
+
+@code {
+
+    string username = string.Empty;
+    string role = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var userdata = await jsr.InvokeAsync<string>("localStorage.getItem", "user").ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(userdata))
+        {
+            string[] userdetails = userdata.Split(';', 3);
+            username = userdetails[0];
+            role = userdetails[1].ToLower();
+        }
+    }
+
+}
