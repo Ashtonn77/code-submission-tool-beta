@@ -12,6 +12,7 @@
 
 @if (Toggle)
 {
-    string url = "/submitPage";
-    navigation.NavigateTo(url + "/" + Candidate.SubmissionId);
+    string url = "/AdminUser";
+    string hashed = Guid.NewGuid().ToString();
+    navigation.NavigateTo(url + "/" + Candidate.SubmissionId + hashed);
 }

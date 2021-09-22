@@ -46,8 +46,16 @@ namespace CodeSubmissionSimple.Server.Data
                     Email = "ashton@gmail.com",
                     Role = "Admin",
                     PasswordHash = "1254wsde9632fgty"
-                }
+                },
+                 new AppUser
+                 {
+                     Id = 2,
+                     Email = "hi@ngn.com",
+                     Role = "Developer",
+                     PasswordHash = "1254wsdeu9632fgty"
+                 }
                 );
+
 
             modelBuilder.Entity<User>().HasData(
                 new User
@@ -79,14 +87,33 @@ namespace CodeSubmissionSimple.Server.Data
                 isCompleted = false
             });
 
+            modelBuilder.Entity<Submission>().HasData(new Submission
+            {
+                SubmissionId = 2,
+                isCompleted = false
+            });
+
             //Tests
             modelBuilder.Entity<Candidate>().HasData(new Candidate
             {
-                CandidateId = 1,
+                Id = 3,
+                Email = "chux05@hotmail.com",
+                Role = "Candidate",
+                PasswordHash = "1254wsdeu96sads2fgty",
                 Name = "Promise",
                 Surname = "Email",
-                Email = "chux05@hotmail.com",
                 SubmissionId = 1
+            });
+
+            modelBuilder.Entity<Candidate>().HasData(new Candidate
+            {
+                Id = 4,
+                Email = "ajdk@gmail.com",
+                Role = "Candidate",
+                PasswordHash = "12sf343sads2fgty",
+                Name = "Tshgo",
+                Surname = "Mochaki",
+                SubmissionId = 2
             });
 
             //Questions - deprecated 

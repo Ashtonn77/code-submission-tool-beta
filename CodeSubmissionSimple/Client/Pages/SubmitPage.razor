@@ -3,7 +3,7 @@
 @using CodeSubmissionSimple.Shared
 @inject HttpClient Http
 @inject NavigationManager navigationManager
-
+@inject IJSRuntime jsr
 
 <style>
     * {
@@ -189,7 +189,7 @@
     }
 </style>
 
-@if (submission != null )
+@if (submission != null && !completed)
 {
     <div class="top-wrapper">
         <div class="top-title"> <h3>Xebec - Testing Environment</h3></div>
@@ -300,25 +300,35 @@
 
         string TempCode { get; set; } = "";
 
-        int counter { get; set; } = 0;
-        int Length { get; set; } = 0;
-        bool completed { get; set; } = true;
-        string width { get; set; } = "200px";
-        protected override async Task OnInitializedAsync()
+    int counter { get; set; } = 0;
+    int Length { get; set; } = 0;
+    bool completed { get; set; } = true;
+    string width { get; set; } = "200px";
+    protected override async Task OnInitializedAsync()
+    {
+        var userdata = await jsr.InvokeAsync<string>("localStorage.getItem", "user").ConfigureAwait(false);
+        string[] userInfo = userdata.Split(';', 3);
+        string tokenEmail = userInfo[0];
+        string role = userInfo[1];
+        //gets the submission model from the ID num
+        string SubmitId = SubmissionValue.Substring(0, 1);
+        submission = await _sClient.GetSubmissionDetails(int.Parse(SubmitId));
+
+        //apologies for the junior dev-like code
+        if (submission != null)
         {
-            //gets the submission model from the ID num
-            submission = await Http.GetFromJsonAsync<Submission>($"api/Submission/1");
 
-            if (submission != null)
-            {
-                Quests = submission.Answers;
-                counter = 0;
-                Length = Quests.Count();
-                setStub(counter);
-                completed = submission.isCompleted;
-
-            }
+            Quests = submission.Answers;
+            counter = 0;
+            Length = Quests.Count();
+            setStub(counter);
+            completed = submission.isCompleted;
         }
+        else
+        {
+            navigationManager.NavigateTo("/error");
+        }
+    }
 
         private void setStub(int counter)
         {
